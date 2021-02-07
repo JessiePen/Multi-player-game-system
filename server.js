@@ -22,7 +22,7 @@ io.on('connection', socket => {
         socket.join(user.room);
 
         //notify the single client
-    socket.emit('message',formatMessage(botName, 'Welcome to Chatroom'));
+    socket.emit('message',formatMessage(botName, `Welcome to ${user.room}`));
 
     //Broadcast when a user connects(other than the client itself)
     socket.broadcast.to(user.room).emit(

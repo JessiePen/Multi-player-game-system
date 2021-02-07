@@ -60,7 +60,6 @@ function outputMessage(message){
 //Add room name  to DOM
 function outputRoomName(room){
     roomName.innerText = room;
-
 }
 
 //Add users to DOM
