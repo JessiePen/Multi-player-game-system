@@ -27,7 +27,7 @@ io.on('connection', socket => {
     //Broadcast when a user connects(other than the client itself)
     socket.broadcast.to(user.room).emit(
         'message',
-        formatMessage(botName, `${user.username} has joined the chat`));
+        formatMessage(botName, `${user.username} has joined the game`));
 
 
     //Send users  and room info
