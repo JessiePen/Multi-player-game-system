@@ -19,7 +19,8 @@
 				<h1><i class="fas fa-smile"></i> PlayUno</h1>
 			</header>
 			<main class="join-main">
-				<form action="chat.html">
+				<form action="chat.html" name="indexform">
+
 					<div class="form-control">
 						<label for="username">Username</label>
 						<input
@@ -30,16 +31,39 @@
 							required
 						/>
 					</div>
-					<div class="form-control">
+					<div class="form-control" id="current-room">
 						<label for="room">Room</label>
-						<select name="room" id="room">
-							<option value="Uno">Uno</option>
-							<option value="Porker">Porker</option>
+						<select name="room" id="room1">
+							<option value="Uno1">Uno1</option>
+							<option value="Uno2">Uno2</option>
 						</select>
 					</div>
-					<button type="submit" class="btn">Join Room</button>
+
+					<div class="form-control">
+					<button type="submit" class="btn" id="join-room">Join Room</button>
+				    </div>
+
+					<div class="form-control">
+						<input type="checkbox" id="checkbox" > Create room</input>
+					</div>
+						
+					<div class="form-control" id="create-room" style="display: none;" >
+						<input
+						type="text"
+						name="room"
+						id="room2"
+						placeholder="Enter room name..."
+						required
+						disabled = "disabled"
+					    />
+						<button type="submit" class="btn" id="create-button">Create Room</button>
+					</div>
 				</form>
+
+				<!-- <button type="submit" class="btn" id="create-button">Create Room</button> -->
+
 			</main>
 		</div>
+		<script src="js/index.js"></script>
 	</body>
 </html>

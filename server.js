@@ -30,14 +30,12 @@ io.on('connection', socket => {
         formatMessage(botName, `${user.username} has joined the game`));
 
 
-    //Send users  and room info
+    //Send users and room info
     io.to(user.room).emit('roomUsers',{
         room: user.room,
         users: getRoomUsers(user.room)
     });
     });
-
-
 
     //Listen for chatMessage
     socket.on('chatMessage', (msg) => {
@@ -64,6 +62,15 @@ io.on('connection', socket => {
             })
         }
     });
+})
+
+// Request new room data
+app.use(require("body-parser").json())
+app.use(require("body-parser").urlencoded({ extended: true }))
+
+app.use(express.json({limit:'1mb'}))
+app.post('/roomname',(request,response) => {
+    console.log(request.body)
 })
 
 const PORT = 4000
