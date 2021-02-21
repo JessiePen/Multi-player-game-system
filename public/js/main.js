@@ -11,7 +11,7 @@ const {username, room} = Qs.parse(location.search,{
 const socket = io();
 
 //join chatroom
-socket.emit('joinRoom',{username,room});
+socket.emit('joinRoom',{username,room}); 
 
 //Get room and users
 socket.on('roomUsers',({room, users}) => {
@@ -65,4 +65,25 @@ function outputUsers(users){
     userList.innerHTML = `
     ${users.map(user => `<li>${user.username}</li>`).join('')}
     `;
+}
+
+//Create initial card
+document.getElementById('ready-btn').addEventListener("click",()=>{
+    socket.emit('createCard',{username,room})
+    document.getElementById('ready-btn').style.display = 'none'
+})
+
+//Get initial card from server
+socket.on('initializeCard', card => {
+    initializeCard(card)
+});
+
+//Output initial card to DOM
+function initializeCard(card){
+    const div = document.createElement('div');
+    div.classList.add('card');
+    const src="/images/" + card.attribute + ".jpg"
+    console.log(card.attribute)
+    div.innerHTML=`<img class="cardImg" src=${src}>`;
+    document.querySelector('.card-container').appendChild(div);
 }

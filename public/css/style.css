@@ -134,6 +134,26 @@ a {
 .card-container{
 	height: 120px;
 	background-color: var(--dark-color-b);
+	padding: 10px 20px;
+}
+
+.cardImg{
+	width: 80px;
+	height: 100px;
+	margin-right: 20px;
+	float: left;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.ready-btn{
+	margin-top: 40px;
+	color: var(--dark-color-a);
+	background: var(--light-color);
+	border: 0px;
+	padding: 5px 15px;
+	cursor: pointer;
+	font-size: 20px;
 }
 
 

@@ -23,7 +23,7 @@ createbtn.addEventListener("click",() => {
     // var obj = document.getElementById("room1");
     var roomname = document.indexform.room[1].value
     // obj.options[obj.options.length] = new Option(`${roomname}`, `${roomname}`);
-    const roomJSON = JSON.stringify({value:`${roomname}`, text:`${roomname}`})
+    const roomJSON = JSON.stringify({value:`${roomame}`, text:`${roomname}`})
 
     const options = {
         method: 'POST',
@@ -32,5 +32,5 @@ createbtn.addEventListener("click",() => {
         },
         body: JSON.stringify(roomJSON)
     }
-    fetch('/roomname', options);
+    fetch('/roomName', options);
 })

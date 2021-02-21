@@ -3,6 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages')
+const formatCard = require('./utils/cards')
 const {userJoin,getCurrentUser,userLeave,getRoomUsers} = require('./utils/users')
 
 const app = express();
@@ -62,6 +63,13 @@ io.on('connection', socket => {
             })
         }
     });
+
+    //Create initial card in server
+    socket.on('createCard', ({username,room}) => {
+        for(i=0;i<7;i++){
+            socket.emit('initializeCard',formatCard(username));            
+        }
+    })
 })
 
 // Request new room data
@@ -69,7 +77,7 @@ app.use(require("body-parser").json())
 app.use(require("body-parser").urlencoded({ extended: true }))
 
 app.use(express.json({limit:'1mb'}))
-app.post('/roomname',(request,response) => {
+app.post('/roomName',(request,response) => {
     console.log(request.body)
 })
 
