@@ -83,7 +83,30 @@ function initializeCard(card){
     const div = document.createElement('div');
     div.classList.add('card');
     const src="/images/" + card.attribute + ".jpg"
-    console.log(card.attribute)
+    // console.log(card.attribute)
     div.innerHTML=`<img class="cardImg" src=${src}>`;
     document.querySelector('.card-container').appendChild(div);
+    div.addEventListener('click',() => {
+        console.log(card.attribute)
+        socket.emit('playCard',card)
+    })
 }
+
+//Listen for card user want to play
+socket.on('card',(card)=>{
+    console.log(card.attribute);
+    outputCard(card)
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+})
+
+//Output card
+function outputCard(card){
+    const div = document.createElement('div');
+    div.classList.add('message');
+    const src="/images/" + card.attribute + ".jpg"
+    div.innerHTML=`<p class="meta">${card.username} <span>${card.time}</span></p>
+    <img class="messageCard" src=${src}>`;
+    document.querySelector('.chat-messages').appendChild(div);
+}
+

@@ -7,7 +7,11 @@ const card = ['add4', 'colour-change','blue-1','blue-2','blue-3','blue-4','blue-
 function formatCard(username){
     const random = Math.floor(Math.random()*46)
     const attribute = card[random]
+    const id = Math.random().toFixed(5)
+    
+
     return{
+        id,
         username,
         attribute,
         time: moment().format('h:mm a')

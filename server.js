@@ -4,7 +4,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages')
 const formatCard = require('./utils/cards')
-const {userJoin,getCurrentUser,userLeave,getRoomUsers} = require('./utils/users')
+const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard} = require('./utils/users')
 
 const app = express();
 const server = http.createServer(app);
@@ -66,11 +66,24 @@ io.on('connection', socket => {
 
     //Create initial card in server
     socket.on('createCard', ({username,room}) => {
+        const user = getCurrentUser(socket.id);
         for(i=0;i<7;i++){
-            socket.emit('initializeCard',formatCard(username));            
+            const card = formatCard(username)
+            socket.emit('initializeCard',card);
+            userAddCard(user.id, user.username, user.room, card)
         }
     })
+
+    //Listen for card to play
+    socket.on('playCard', (card) => {
+        const user = getCurrentUser(socket.id);
+        io.to(user.room).emit('card', card);
+        userDropCard(user,card)
+        console.log(user.cards)
+    })
 })
+
+
 
 // Request new room data
 app.use(require("body-parser").json())

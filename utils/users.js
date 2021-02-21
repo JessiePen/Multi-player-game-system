@@ -1,4 +1,5 @@
 const users = [];
+const cards = [];
 
 //Join user to chat
 
@@ -41,6 +42,8 @@ function userLeave(id){
     const index = users.findIndex(user => user.id === id);
 
     if(index !== -1){
+        // const test = users.splice(index,1)
+        // console.log(test)
         return  users.splice(index,1)[0];
     }
 }
@@ -50,9 +53,32 @@ function getRoomUsers(room){
     return users.filter(user => user.room === room)
 }
 
+//User add card
+function userAddCard(id,username,room,card){
+    cards.push(card);
+    const index = users.findIndex(user => user.id === id);
+    const newUser = {id, username, room, cards}
+
+    if(index !== -1){
+        users.splice(index,1,newUser)
+    }
+
+    return newUser
+}
+
+//User drop card
+function userDropCard(user,card){
+    //  notesToKeep = notes.filter((note) => note.title !== title)
+     cardsToKeep = user.cards.filter((cardKeep) => cardKeep.id !== card.id )
+     user.cards = cardsToKeep
+}
+
+
 module.exports = {
     userJoin,
     getCurrentUser,
     userLeave, 
-    getRoomUsers
+    getRoomUsers,
+    userAddCard,
+    userDropCard
 }
