@@ -69,38 +69,37 @@ function outputUsers(users){
 
 //Create initial card
 document.getElementById('ready-btn').addEventListener("click",()=>{
-    socket.emit('createCard',{username,room})
+    socket.emit('initializeCard',{username,room})
     document.getElementById('ready-btn').style.display = 'none'
 })
 
 //Get initial card from server
-socket.on('initializeCard', card => {
-    initializeCard(card)
+socket.on('outputUserCard', user => {
+    outputUserCard(user)
 });
 
-//Output initial card to DOM
-function initializeCard(card){
-    const div = document.createElement('div');
-    div.classList.add('card');
-    const src="/images/" + card.attribute + ".jpg"
-    // console.log(card.attribute)
-    div.innerHTML=`<img class="cardImg" src=${src}>`;
-    document.querySelector('.card-container').appendChild(div);
-    div.addEventListener('click',() => {
-        console.log(card.attribute)
-        socket.emit('playCard',card)
-    })
+
+//Output users' card to choose area
+function outputUserCard(user){
+    const cardNum = user.cards.length;
+    const cardContainer = document.querySelector('.card-container')
+    cardContainer.innerHTML = ``
+
+    for(i=0;i<cardNum;i++){
+        const div = document.createElement('div');
+        const card=user.cards[i]
+        div.classList.add('card');
+        const src="/images/" + card.attribute + ".jpg"
+        div.innerHTML=`<img class="cardImg" src=${src}>`;
+        cardContainer.appendChild(div);
+        div.addEventListener('click',() => {
+            console.log(card.attribute)
+            socket.emit('playCard',card)
+        })
+    }
 }
 
-//Listen for card user want to play
-socket.on('card',(card)=>{
-    console.log(card.attribute);
-    outputCard(card)
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-})
-
-//Output card
+//Output card to message area
 function outputCard(card){
     const div = document.createElement('div');
     div.classList.add('message');
@@ -109,4 +108,12 @@ function outputCard(card){
     <img class="messageCard" src=${src}>`;
     document.querySelector('.chat-messages').appendChild(div);
 }
+
+//Listen for card user want to play
+socket.on('outputCard',(card)=>{
+    console.log(card.attribute);
+    outputCard(card)
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+})
+
 

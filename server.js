@@ -4,7 +4,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages')
 const formatCard = require('./utils/cards')
-const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard} = require('./utils/users')
+const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard, emptyCards} = require('./utils/users')
 
 const app = express();
 const server = http.createServer(app);
@@ -54,7 +54,7 @@ io.on('connection', socket => {
         if(user){
             io.to(user.room).emit(
                 'message',
-                formatMessage(botName, `${user.username} has left the chat`)
+                formatMessage(botName, `${user.username} has left the game`)
                 );
 
             io.to(user.room).emit('roomUsers',{
@@ -65,25 +65,26 @@ io.on('connection', socket => {
     });
 
     //Create initial card in server
-    socket.on('createCard', ({username,room}) => {
-        const user = getCurrentUser(socket.id);
+    socket.on('initializeCard', ({username,room}) => {
+        var user = getCurrentUser(socket.id);
         for(i=0;i<7;i++){
             const card = formatCard(username)
-            socket.emit('initializeCard',card);
-            userAddCard(user.id, user.username, user.room, card)
+            user = userAddCard(user.id, user.username, user.room, card)
         }
+        console.log(user.cards)
+        emptyCards()
+        socket.emit('outputUserCard',user);
     })
 
     //Listen for card to play
     socket.on('playCard', (card) => {
         const user = getCurrentUser(socket.id);
-        io.to(user.room).emit('card', card);
         userDropCard(user,card)
+        io.to(user.room).emit('outputCard', card);
         console.log(user.cards)
+        socket.emit('outputUserCard', user)
     })
 })
-
-
 
 // Request new room data
 app.use(require("body-parser").json())

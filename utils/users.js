@@ -1,5 +1,5 @@
 const users = [];
-const cards = [];
+var cards =[];
 
 //Join user to chat
 
@@ -73,6 +73,10 @@ function userDropCard(user,card){
      user.cards = cardsToKeep
 }
 
+function emptyCards(){
+    cards=[]
+}
+
 
 module.exports = {
     userJoin,
@@ -80,5 +84,6 @@ module.exports = {
     userLeave, 
     getRoomUsers,
     userAddCard,
-    userDropCard
+    userDropCard,
+    emptyCards
 }
