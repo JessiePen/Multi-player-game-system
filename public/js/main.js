@@ -47,12 +47,12 @@ chatForm.addEventListener('submit',(e)=>{
 // Output message to DOM
 function outputMessage(message){
     const div = document.createElement('div');
-    div.classList.add('message');
+    div.classList.add('message-form');
     div.innerHTML=`<p class="meta">${message.username} <span>${message.time}</span></p>
                         <p class="text">
                         ${message.text}
                         </p>`;
-    document.querySelector('.chat-messages').appendChild(div);
+    document.querySelector('.chat-sidebar-right').appendChild(div);
 }
 
 //Add room name  to DOM
@@ -71,6 +71,7 @@ function outputUsers(users){
 document.getElementById('ready-btn').addEventListener("click",()=>{
     socket.emit('initializeCard',{username,room})
     document.getElementById('ready-btn').style.display = 'none'
+    document.querySelector('.chat-messages').setAttribute('style','opacity: 0.8');
 })
 
 //Get initial card from server
@@ -87,10 +88,12 @@ function outputUserCard(user){
 
     for(i=0;i<cardNum;i++){
         const div = document.createElement('div');
+        div.className='div';
         const card=user.cards[i]
         div.classList.add('card');
         const src="/images/" + card.attribute + ".jpg"
         div.innerHTML=`<img class="cardImg" src=${src}>`;
+
         cardContainer.appendChild(div);
         div.addEventListener('click',() => {
             console.log(card.attribute)
