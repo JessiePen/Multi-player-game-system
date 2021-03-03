@@ -67,12 +67,23 @@ function outputUsers(users){
     `;
 }
 
-//Create initial card
+//User ready
 document.getElementById('ready-btn').addEventListener("click",()=>{
-    socket.emit('initializeCard',{username,room})
+    socket.emit('userReady')
     document.getElementById('ready-btn').style.display = 'none'
+    document.querySelector('.card-container').innerHTML = `<div class="ready"><h2>Waiting for other players ...</h2></div>`
+
+    // socket.emit('initializeCard',{username,room})
+    // document.getElementById('ready-btn').style.display = 'none'
+    // document.querySelector('.chat-messages').setAttribute('style','opacity: 0.8');
+})
+
+//Listen for the ready signal
+socket.on('allReady',() => {
+    socket.emit('initializeCard',{username,room})
     document.querySelector('.chat-messages').setAttribute('style','opacity: 0.8');
 })
+
 
 //Get initial card from server
 socket.on('outputUserCard', user => {

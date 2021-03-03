@@ -205,6 +205,11 @@ a {
 	font-size: 20px;
 }
 
+.ready{
+	text-align: center;
+	color: rgba(0, 0, 0, 0.8);
+	line-height: 120px;
+}
 
 /* Join Page */
 .join-container {

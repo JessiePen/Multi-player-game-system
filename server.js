@@ -4,7 +4,9 @@ const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages')
 const formatCard = require('./utils/cards')
-const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard, emptyCards} = require('./utils/users')
+
+const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard, emptyCards} = require('./utils/users');
+const { getAllRooms, addRoom } = require('./utils/room');
 
 const app = express();
 const server = http.createServer(app);
@@ -64,6 +66,31 @@ io.on('connection', socket => {
         }
     });
 
+    //Listen for ready users 
+
+    socket.on('userReady', () => {
+        const rooms = getAllRooms()
+        const user = getCurrentUser(socket.id)
+
+        var currentRoom = rooms.filter(room =>  room.roomName === user.room)[0]
+
+        if(currentRoom !== undefined){
+            currentRoom.readyUserNum += 1
+        }else{
+            currentRoom = {roomName: user.room, readyUserNum: 1}
+            addRoom(currentRoom)
+        }
+
+        console.log(currentRoom)
+
+        if(currentRoom.length != 0){
+            if(getRoomUsers(user.room).length === currentRoom.readyUserNum){
+                io.to(user.room).emit('allReady')
+            }
+        }
+    })
+    
+
     //Create initial card in server
     socket.on('initializeCard', ({username,room}) => {
         var user = getCurrentUser(socket.id);
@@ -71,7 +98,6 @@ io.on('connection', socket => {
             const card = formatCard(username)
             user = userAddCard(user.id, user.username, user.room, card)
         }
-        console.log(user.cards)
         emptyCards()
         socket.emit('outputUserCard',user);
     })
@@ -81,7 +107,6 @@ io.on('connection', socket => {
         const user = getCurrentUser(socket.id);
         userDropCard(user,card)
         io.to(user.room).emit('outputCard', card);
-        console.log(user.cards)
         socket.emit('outputUserCard', user)
     })
 })
