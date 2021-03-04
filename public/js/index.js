@@ -20,17 +20,17 @@ checkbox.addEventListener("click",() => {
 const createbtn =  document.getElementById("create-button")
 
 createbtn.addEventListener("click",() => {
-    // var obj = document.getElementById("room1");
-    var roomname = document.indexform.room[1].value
-    // obj.options[obj.options.length] = new Option(`${roomname}`, `${roomname}`);
-    const roomJSON = JSON.stringify({value:`${roomame}`, text:`${roomname}`})
+    var roomName = document.indexform.room[1].value
+    const roomInfo = {value:`${roomName}`, text:`${roomName}`}
+
+    console.log(roomInfo)
 
     const options = {
         method: 'POST',
         header: {
             'Content-Type' : 'application/json'
         },
-        body: JSON.stringify(roomJSON)
+        body: JSON.stringify(roomInfo)
     }
-    fetch('/roomName', options);
+    fetch('/index', options);
 })

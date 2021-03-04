@@ -112,11 +112,12 @@ io.on('connection', socket => {
 })
 
 // Request new room data
-app.use(require("body-parser").json())
-app.use(require("body-parser").urlencoded({ extended: true }))
+var bodyParser = require("body-parser");
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json({limit:'1mb'}))
-app.post('/roomName',(request,response) => {
+app.post('/index',(request,response) => {
     console.log(request.body)
 })
 
