@@ -1,13 +1,8 @@
-// fs = require('fs')
+const fs = require('fs')
 
-// const createbtn =  document.getElementById("create-button")
+const saveRooms = (room) => {
+    const dataJSON = JSON.stringify(room)
+    fs.writeFileSync('./public/rooms.json',dataJSON)
+}
 
-// createbtn.addEventListener("click",() => {
-//     // var obj = document.getElementById("room1");
-//     var roomname = document.indexform.room[1].value
-//     // obj.options[obj.options.length] = new Option(`${roomname}`, `${roomname}`);
-
-//     console.log(roomname)
-//     const roomJSON = JSON.stringify({value:`${roomname}`, text:`${roomname}`})
-//     fs.writeFileSync('../notes.json', roomJSON)
-// })
+module.exports = saveRooms

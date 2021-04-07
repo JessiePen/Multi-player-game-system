@@ -27,10 +27,10 @@ createbtn.addEventListener("click",() => {
 
     const options = {
         method: 'POST',
-        header: {
+        headers: {
             'Content-Type' : 'application/json'
         },
         body: JSON.stringify(roomInfo)
     }
-    fetch('/index', options);
+    fetch('/index', options).then(response => {console.log(response)});
 })

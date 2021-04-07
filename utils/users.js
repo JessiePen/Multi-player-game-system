@@ -37,6 +37,10 @@ function getCurrentUser(id){
     return users.find(user => user.id === id);
 }
 
+function getTurnUser(turn){
+    return users[turn]
+}
+
 //User leaves  chat
 function userLeave(id){
     const index = users.findIndex(user => user.id === id);
@@ -85,5 +89,6 @@ module.exports = {
     getRoomUsers,
     userAddCard,
     userDropCard,
-    emptyCards
+    emptyCards,
+    getTurnUser
 }

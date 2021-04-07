@@ -2,10 +2,16 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
+const fs =require('fs');
+const saveRooms = require('./public/js/room')
 const formatMessage = require('./utils/messages')
-const formatCard = require('./utils/cards')
+// const formatCard = require('./utils/cards')
+// const checkCard = require('./utils/cards')
+// const checkCard = require('./utils/cards')
+// const checkCard = require('./utils/cards')
+const {formatCard,checkCard} = require('./utils/cards')
 
-const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard, emptyCards} = require('./utils/users');
+const {userJoin,getCurrentUser,userLeave,getRoomUsers, userAddCard, userDropCard, emptyCards,getTurnUser} = require('./utils/users');
 const { getAllRooms, addRoom } = require('./utils/room');
 
 const app = express();
@@ -105,21 +111,92 @@ io.on('connection', socket => {
     //Listen for card to play
     socket.on('playCard', (card) => {
         const user = getCurrentUser(socket.id);
-        userDropCard(user,card)
-        io.to(user.room).emit('outputCard', card);
-        socket.emit('outputUserCard', user)
+
+        // console.log(checkCard(card))
+
+        if(checkCard(card)){
+          userDropCard(user,card)
+          io.to(user.room).emit('outputCard', card);
+          socket.emit('outputUserCard', user)
+          // socket.emit('readyNextTurn')
+          nextTurn()
+        }else{
+          socket.emit('wrongCard')
+        }
     })
+
+
+    // Game begin here
+
+    //The first player join the room should play first
+    socket.on('firstToPlay',()=>{
+      const user = getCurrentUser(socket.id)
+      
+      if (user.id != getRoomUsers(user.room)[0].id){
+        socket.emit('NotYourTurn')
+      }else{
+        socket.emit('TurnToPlay',user)
+      }
+    })
+
+    // Choose the next player
+    // socket.on('nextTurn',() => {
+    //   const user = getCurrentUser(socket.id)
+    //   userNum = getRoomUsers(user.room).length
+    //   // var userToPlay = getTurn(userNum)
+    //   var userToPlay = getRoomUsers(user.room)[getTurn(userNum,user)]        
+
+    //   io.to(userToPlay.id).emit('TurnToPlay',userToPlay);
+
+    // })
+
+    function nextTurn(){
+      const user = getCurrentUser(socket.id)
+      userNum = getRoomUsers(user.room).length
+      // var userToPlay = getTurn(userNum)
+      var userToPlay = getRoomUsers(user.room)[getTurn(userNum,user)]        
+
+      io.to(userToPlay.id).emit('TurnToPlay',userToPlay);
+    }
+
+
 })
+
+function getTurn(userNum,currentUser){
+  var userTern=0.
+  for(i=0;i<userNum;i++){
+    if(getRoomUsers(currentUser.room)[i].id == currentUser.id){
+      userTern = i
+      }
+  }
+
+  userTern += 1
+
+  if(userTern == userNum){
+    userTern = 0
+    }
+
+  return userTern
+}
+
 
 // Request new room data
 var bodyParser = require("body-parser");
+const { text } = require('body-parser');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json({limit:'1mb'}))
 app.post('/index',(request,response) => {
     console.log(request.body)
-})
+    room = request.body;
+    saveRooms(room)
+    response.json({
+      status:'success',
+      value: room.value,
+      text: room.text 
+    })
+  })
 
 const PORT = 4000
 
