@@ -1,6 +1,15 @@
 const moment = require("moment");
 const card = [
   "add4",
+  "add4",
+  "add4",
+  "add4",
+  "add4",
+  "add4",
+  "add4",
+  "add4",
+  "add4",
+  "add4",
   "colour-change",
   "blue-1",
   "blue-2",
@@ -100,10 +109,24 @@ const blueCard = [
   "blue-add2",
   "blue-inverse",
 ];
+
+const card0 = ["blue-0", "green-0", "yellow-0", "red-0"];
+const card1 = ["blue-1", "green-1", "yellow-1", "red-1"];
+const card2 = ["blue-2", "green-2", "yellow-2", "red-2"];
+const card3 = ["blue-3", "green-3", "yellow-3", "red-3"];
+const card4 = ["blue-4", "green-4", "yellow-4", "red-4"];
+const card5 = ["blue-5", "green-5", "yellow-5", "red-5"];
+const card6 = ["blue-6", "green-6", "yellow-6", "red-6"];
+const card7 = ["blue-7", "green-7", "yellow-7", "red-7"];
+const card8 = ["blue-8", "green-8", "yellow-8", "red-8"];
+const card9 = ["blue-9", "green-9", "yellow-9", "red-9"];
+
 const blackCard = ["add4", "colour-change"];
 
 function formatCard(username) {
-  const random = Math.floor(Math.random() * 46);
+  // const random = Math.floor(Math.random() * 46);
+  const random = Math.floor(Math.random() * 55);
+
   const attribute = card[random];
   const id = Math.random().toFixed(5);
 
@@ -116,30 +139,91 @@ function formatCard(username) {
 }
 
 var lastCategory = [];
-const cardCategory = [greenCard, redCard, yellowCard, blackCard, blueCard];
+var lastNumber = [];
 
-function checkCard(card) {
+const cardCategory = [greenCard, redCard, yellowCard, blueCard, blackCard];
+const cardNum = [
+  card0,
+  card1,
+  card2,
+  card3,
+  card4,
+  card5,
+  card6,
+  card7,
+  card8,
+  card9,
+];
+
+function inspectCard(card) {
   var category = [];
+  var number = [];
 
-  cardCategory.forEach(element => { 
+  cardCategory.forEach((element) => {
     if (element.indexOf(card.attribute) > -1) {
       category = element;
     }
   });
 
+  cardNum.forEach((element) => {
+    if (element.indexOf(card.attribute) > -1) {
+      number = element;
+    }
+  });
+
+  // console.log(category)
+  // console.log(number)
+
+  return [category, number];
+}
+
+function checkCard(card) {
+  var category = inspectCard(card)[0];
+  var number = inspectCard(card)[1];
+
   if (lastCategory.length == 0) {
     lastCategory = category;
+    lastNumber = number;
     return true;
   } else {
-    if (lastCategory.indexOf(card.attribute) > -1) {
+    if (card.attribute == "add4" || card.attribute == "colour-change") {
       return true;
     } else {
-      return false;
+      if (
+        lastCategory.indexOf(card.attribute) > -1 ||
+        lastNumber.indexOf(card.attribute) > -1
+      ) {
+        lastCategory = category;
+        lastNumber = number;
+
+        return true;
+      } else {
+        return false;
+      }
     }
+  }
+}
+
+function setLastColour(colour) {
+  if (colour == "red") {
+    lastCategory = redCard;
+  }
+
+  if (colour == "green") {
+    lastCategory = greenCard;
+  }
+
+  if (colour == "blue") {
+    lastCategory = blueCard;
+  }
+
+  if (colour == "yellow") {
+    lastCategory = yellowCard;
   }
 }
 
 module.exports = {
   formatCard,
   checkCard,
+  setLastColour,
 };

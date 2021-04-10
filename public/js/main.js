@@ -1,5 +1,6 @@
 const chatForm = document.getElementById("chat-form");
 const chatMessages = document.querySelector(".chat-messages");
+const chatMessagesRight = document.querySelector(".chat-sidebar-right");
 const roomName = document.getElementById("room-name");
 const userList = document.getElementById("users");
 
@@ -25,7 +26,7 @@ socket.on("message", (message) => {
   outputMessage(message);
 
   //scroll down
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  chatMessagesRight.scrollTop = chatMessagesRight.scrollHeight;
 });
 
 //Message submit
@@ -70,19 +71,17 @@ function outputUsers(users) {
 document.getElementById("ready-btn").addEventListener("click", () => {
   socket.emit("userReady");
   document.getElementById("ready-btn").style.display = "none";
+
   document.querySelector(
     ".card-container"
   ).innerHTML = `<div class="ready"><h2>Waiting for other players ...</h2></div>`;
-
-  // socket.emit('initializeCard',{username,room})
-  // document.getElementById('ready-btn').style.display = 'none'
-  // document.querySelector('.chat-messages').setAttribute('style','opacity: 0.8');
 });
 
 //Listen for the ready signal
 socket.on("allReady", () => {
   socket.emit("initializeCard", { username, room });
   socket.emit("firstToPlay");
+
   document
     .querySelector(".chat-messages")
     .setAttribute("style", "opacity: 0.8");
@@ -96,6 +95,7 @@ socket.on("outputUserCard", (user) => {
 //Output user card in hand to card area
 function outputUserCard(user) {
   const cardNum = user.cards.length;
+  console.log(cardNum);
   const cardContainer = document.querySelector(".card-container");
   cardContainer.innerHTML = ``;
 
@@ -106,30 +106,34 @@ function outputUserCard(user) {
     div.classList.add("card");
     const src = "/images/" + card.attribute + ".jpg";
     div.innerHTML = `<img class="cardImg" src=${src}>`;
-
     cardContainer.appendChild(div);
+
     div.addEventListener("click", () => {
       console.log(card.attribute);
+
+      if (card.attribute == "add4" || card.attribute == "colour-change") {
+        document.getElementById("choose-colour").style.display = "block";
+      }
       socket.emit("playCard", card);
-      // socket.emit('nextTurn')
     });
   }
 
   const cover = document.createElement("div");
   cover.classList.add("card-container-cover");
+  cover.style.height = (cardContainer.offsetHeight - 20) + "px";
+  if(cardNum > 10){
+    cover.style.height = (cardContainer.offsetHeight - 20+120) + "px";
+  }
   cover.id = "cover";
   cardContainer.appendChild(cover);
 }
-
-//After a player playing an allowed card, begin next turn
-// socket.on('readyNextTurn',() => {
-//   socket.emit('nextTurn')
-// })
 
 //Listen for card user want to play
 socket.on("outputCard", (card) => {
   console.log(card.attribute);
   outputCard(card);
+  document.getElementById("skip-btn").style.display = "none";
+
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
@@ -147,15 +151,32 @@ socket.on("TurnToPlay", (user) => {
   console.log("turn to play");
   console.log(document.getElementById("cover"));
   document.getElementById("cover").style.display = "none";
+  document.getElementById("skip-btn").style.display = "block";
 });
 
 //When the card obeys the rules
 socket.on("wrongCard", () => {
   console.log("You are not allowed to play");
   document.getElementById("wrong-card").style.display = "block";
-  
+
   setTimeout(() => {
     document.getElementById("wrong-card").style.display = "none";
-}, 1500);
+  }, 1500);
+});
 
+//When user skip their turns
+document.getElementById("skip-btn").addEventListener("click", () => {
+  document.getElementById("cover").style.display = "block";
+  document.getElementById("skip-btn").style.display = "none";
+  socket.emit("Skip");
+});
+
+// User choose colour
+var colours = ["blue", "green", "red", "yellow"];
+colours.forEach((element) => {
+  document.getElementById(element).addEventListener("click", () => {
+    console.log(element);
+    document.getElementById("choose-colour").style.display = "none";
+    socket.emit("newColour", element);
+  });
 });
