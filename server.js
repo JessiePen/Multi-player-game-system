@@ -219,17 +219,6 @@ io.on("connection", (socket) => {
     io.to(nextUser.id).emit("outputUserCard", nextUser);
   }
 
-  // function getNextUser(rev) {
-  //   const user = getCurrentUser(socket.id);
-  //   userNum = getRoomUsers(user.room).length;
-  //   if (rev == false) {
-  //     var userToPlay = getRoomUsers(user.room)[getTurn(userNum, user)];
-  //   } else {
-  //     var userToPlay = getRoomUsers(user.room)[getReverseTurn(userNum, user)];
-  //   }
-  //   return userToPlay;
-  // }
-
   function getNextUser(user, rev) {
     userNum = getRoomUsers(user.room).length;
     if (rev == false) {
@@ -243,6 +232,7 @@ io.on("connection", (socket) => {
   socket.on("broadcastPlayingUser", (user) => {
     io.to(user.room).emit("playingUser", user);
   });
+
 });
 
 function getTurn(userNum, currentUser) {
@@ -279,13 +269,10 @@ function getReverseTurn(userNum, currentUser) {
 
 // Request new room data
 var bodyParser = require("body-parser");
-const { text } = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.json({ limit: "1mb" }));
-app.post("/index", (request, response) => {
-  console.log(request.body);
+app.post("/chat", (request, response) => {
   room = request.body;
   saveRooms(room);
   response.json({
@@ -294,6 +281,12 @@ app.post("/index", (request, response) => {
     text: room.text,
   });
 });
+
+app.post('/index.html',(req,res) => {
+  console.log(req.body)
+  res.status(201).send("get request")
+})
+
 
 const PORT = 4000;
 

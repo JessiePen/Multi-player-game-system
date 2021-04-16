@@ -32,5 +32,5 @@ createbtn.addEventListener("click",() => {
         },
         body: JSON.stringify(roomInfo)
     }
-    fetch('/index', options).then(response => {console.log(response)});
+    fetch('/chat', options).then(response => {console.log(response)});
 })

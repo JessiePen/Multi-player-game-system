@@ -4,8 +4,7 @@
   "description": "Realtime chat app with rooms",
   "main": "server.js",
   "scripts": {
-    "start": "node server",
-    "dev": "nodemon server"
+    "start": "node server"
   },
   "author": "Yuhe Peng",
   "license": "MIT",
@@ -15,7 +14,5 @@
     "moment": "^2.29.1",
     "socket.io": "^3.0.5"
   },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
-  }
+  "devDependencies": {}
 }
