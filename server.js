@@ -16,8 +16,8 @@ const {
   userDropCard,
   emptyCards,
 } = require("./utils/users");
-const { getAllRooms, addRoom } = require("./utils/room");
 
+const { getAllRooms, addRoom } = require("./utils/room");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -25,6 +25,18 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, "public")));
 
 const botName = "Admin";
+var reverse = false;
+
+var reverseCards = [
+  "green-inverse",
+  "red-inverse",
+  "blue-inverse",
+  "yellow-inverse",
+];
+
+var banCards = ["red-ban", "green-ban", "blue-ban", "yellow-ban"];
+
+var addTwoCards = ["green-add2", "red-add2", "blue-add2", "yellow-add2"];
 
 //Run when client connects
 io.on("connection", (socket) => {
@@ -34,6 +46,7 @@ io.on("connection", (socket) => {
 
     //notify the single client
     socket.emit("message", formatMessage(botName, `Welcome to ${user.room}`));
+    socket.emit("username", user.username);
 
     //Broadcast when a user connects(other than the client itself)
     socket.broadcast
@@ -119,17 +132,46 @@ io.on("connection", (socket) => {
       if (card.attribute == "add4") {
         addNextCards(4);
       }
-      
-      var addTwoCards = ["green-add2", "red-add2", "blue-add2", "yellow-add2"]
-      if(addTwoCards.indexOf(card.attribute)>-1){
-        addNextCards(2)
+
+      if (addTwoCards.indexOf(card.attribute) > -1) {
+        addNextCards(2);
+      }
+
+      if (reverseCards.indexOf(card.attribute) > -1) {
+        if (reverse == false) {
+          reverse = true;
+        } else {
+          reverse = false;
+        }
       }
 
       userDropCard(user, card);
       io.to(user.room).emit("outputCard", card);
       socket.emit("outputUserCard", user);
-      var nextUser = getNextUser();
-      io.to(nextUser.id).emit("TurnToPlay", nextUser);
+
+      // Notify the winner
+      if (user.cards.length == 0) {
+        socket.emit("win");
+
+        //Notify other players
+        socket.broadcast.to(user.room).emit("lose");
+
+        //Admin announce the result
+        io.to(user.room).emit(
+          "message",
+          formatMessage(botName, `${user.username} win!`)
+        );
+      } else {
+
+        if (banCards.indexOf(card.attribute) > -1) {
+          var nextUser = getNextUser(user, reverse);
+          var nextNextUser = getNextUser(nextUser, reverse);
+          io.to(nextNextUser.id).emit("TurnToPlay", nextNextUser);
+        }else{
+          var nextUser = getNextUser(user, reverse);
+          io.to(nextUser.id).emit("TurnToPlay", nextUser);
+        }
+      }
     } else {
       socket.emit("wrongCard");
     }
@@ -163,12 +205,13 @@ io.on("connection", (socket) => {
     user.cards.push(card);
     // user = userAddCard(user.id, user.username, user.room, card)
     socket.emit("outputUserCard", user);
-    var nextUser = getNextUser();
+    var nextUser = getNextUser(user, reverse);
     io.to(nextUser.id).emit("TurnToPlay", nextUser);
   });
 
   function addNextCards(num) {
-    var nextUser = getNextUser();
+    var user = getCurrentUser(socket.id);
+    var nextUser = getNextUser(user, reverse);
     for (i = 0; i < num; i++) {
       const card = formatCard(nextUser.username);
       nextUser.cards.push(card);
@@ -176,13 +219,30 @@ io.on("connection", (socket) => {
     io.to(nextUser.id).emit("outputUserCard", nextUser);
   }
 
-  function getNextUser() {
-    const user = getCurrentUser(socket.id);
+  // function getNextUser(rev) {
+  //   const user = getCurrentUser(socket.id);
+  //   userNum = getRoomUsers(user.room).length;
+  //   if (rev == false) {
+  //     var userToPlay = getRoomUsers(user.room)[getTurn(userNum, user)];
+  //   } else {
+  //     var userToPlay = getRoomUsers(user.room)[getReverseTurn(userNum, user)];
+  //   }
+  //   return userToPlay;
+  // }
+
+  function getNextUser(user, rev) {
     userNum = getRoomUsers(user.room).length;
-    // var userToPlay = getTurn(userNum)
-    var userToPlay = getRoomUsers(user.room)[getTurn(userNum, user)];
+    if (rev == false) {
+      var userToPlay = getRoomUsers(user.room)[getTurn(userNum, user)];
+    } else {
+      var userToPlay = getRoomUsers(user.room)[getReverseTurn(userNum, user)];
+    }
     return userToPlay;
   }
+
+  socket.on("broadcastPlayingUser", (user) => {
+    io.to(user.room).emit("playingUser", user);
+  });
 });
 
 function getTurn(userNum, currentUser) {
@@ -197,6 +257,22 @@ function getTurn(userNum, currentUser) {
 
   if (userTern == userNum) {
     userTern = 0;
+  }
+  return userTern;
+}
+
+function getReverseTurn(userNum, currentUser) {
+  var userTern = 0;
+  for (i = 0; i < userNum; i++) {
+    if (getRoomUsers(currentUser.room)[i].id == currentUser.id) {
+      userTern = i;
+    }
+  }
+
+  userTern -= 1;
+
+  if (userTern < 0) {
+    userTern = userNum - 1;
   }
   return userTern;
 }

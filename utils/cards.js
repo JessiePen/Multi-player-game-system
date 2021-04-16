@@ -1,14 +1,11 @@
 const moment = require("moment");
 const card = [
   "add4",
+  "colour-change",
   "add4",
+  "colour-change",
   "add4",
-  "add4",
-  "add4",
-  "add4",
-  "add4",
-  "add4",
-  "add4",
+  "colour-change",
   "add4",
   "colour-change",
   "blue-1",
@@ -22,6 +19,19 @@ const card = [
   "blue-9",
   "blue-add2",
   "blue-inverse",
+  "blue-ban",
+  "blue-1",
+  "blue-2",
+  "blue-3",
+  "blue-4",
+  "blue-5",
+  "blue-6",
+  "blue-7",
+  "blue-8",
+  "blue-9",
+  "blue-add2",
+  "blue-inverse",
+  "blue-ban",
   "green-1",
   "green-2",
   "green-3",
@@ -33,6 +43,19 @@ const card = [
   "green-9",
   "green-add2",
   "green-inverse",
+  "green-ban",
+  "green-1",
+  "green-2",
+  "green-3",
+  "green-4",
+  "green-5",
+  "green-6",
+  "green-7",
+  "green-8",
+  "green-9",
+  "green-add2",
+  "green-inverse",
+  "green-ban",
   "yellow-1",
   "yellow-2",
   "yellow-3",
@@ -44,6 +67,19 @@ const card = [
   "yellow-9",
   "yellow-add2",
   "yellow-inverse",
+  "yellow-ban",
+  "yellow-1",
+  "yellow-2",
+  "yellow-3",
+  "yellow-4",
+  "yellow-5",
+  "yellow-6",
+  "yellow-7",
+  "yellow-8",
+  "yellow-9",
+  "yellow-add2",
+  "yellow-inverse",
+  "yellow-ban",
   "red-1",
   "red-2",
   "red-3",
@@ -55,6 +91,19 @@ const card = [
   "red-9",
   "red-inverse",
   "red-add2",
+  "red-ban",
+  "red-1",
+  "red-2",
+  "red-3",
+  "red-4",
+  "red-5",
+  "red-6",
+  "red-7",
+  "red-8",
+  "red-9",
+  "red-inverse",
+  "red-add2",
+  "red-ban",
 ];
 
 const greenCard = [
@@ -69,6 +118,8 @@ const greenCard = [
   "green-9",
   "green-add2",
   "green-inverse",
+  "green-ban",
+
 ];
 const redCard = [
   "red-1",
@@ -82,6 +133,7 @@ const redCard = [
   "red-9",
   "red-inverse",
   "red-add2",
+  "red-ban",
 ];
 const yellowCard = [
   "yellow-1",
@@ -95,6 +147,8 @@ const yellowCard = [
   "yellow-9",
   "yellow-add2",
   "yellow-inverse",
+  "yellow-ban",
+
 ];
 const blueCard = [
   "blue-1",
@@ -108,6 +162,7 @@ const blueCard = [
   "blue-9",
   "blue-add2",
   "blue-inverse",
+  "blue-ban",
 ];
 
 const card0 = ["blue-0", "green-0", "yellow-0", "red-0"];
@@ -122,13 +177,18 @@ const card8 = ["blue-8", "green-8", "yellow-8", "red-8"];
 const card9 = ["blue-9", "green-9", "yellow-9", "red-9"];
 
 const blackCard = ["add4", "colour-change"];
+var cardSet = card
 
 function formatCard(username) {
   // const random = Math.floor(Math.random() * 46);
-  const random = Math.floor(Math.random() * 55);
-
+  const random = Math.floor(Math.random() * cardSet.length);
+  cardSet.splice(random,1)
   const attribute = card[random];
   const id = Math.random().toFixed(5);
+
+  if(cardSet.length==0){
+    cardSet = card
+  }
 
   return {
     id,

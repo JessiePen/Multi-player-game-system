@@ -19,10 +19,16 @@
       <div class="chat-sidebar">
         <h3><i class="fas fa-tag"></i> Room Name:</h3>
         <h2 id="room-name">uno</h2>
+        <h3><i class="fas fa-user-alt"></i> Username:</h3>
+        <h2 id="user-name">username</h2>
         <h3><i class="fas fa-users"></i> Players</h3>
-        <ul id="users"></ul>
+        <ul id="users" style="overflow-y: auto;"></ul>
       </div>
+
       <div class="wrong-card" id="wrong-card" style="display:none;"><i class="fas fa-times-circle"></i>  Cannot play this card</div>
+      <div class="announce-result" id="winner" style="display: none;"><i class="fas fa-laugh-squint"></i>  Congratulations! You win!</div>
+      <div class="announce-result" id="loser" style="display: none;"><i class="fas fa-frown"></i>  Sorry, you lose.</div>
+
       <div class="choose-colour" id="choose-colour">
 
         <button class="card-colour blue-card" id="blue"></button>

@@ -154,7 +154,7 @@ a {
   padding: 10px;
   width: 400px;
   height: 50px;
-  background-color: rgb(245, 245, 245, 0.9);
+  background-color: snow;
   font-size: 20px;
   z-index: 3;
   position: absolute;
@@ -162,6 +162,20 @@ a {
   color: red;
   animation: anim 1.6s;
   /* animation: anim2 0.5s */
+}
+
+.announce-result {
+  margin-left: 300px;
+  margin-top: 200px;
+  padding: 10px;
+  width: 400px;
+  height: 50px;
+  background-color: snow;
+  font-size: 20px;
+  z-index: 3;
+  position: absolute;
+  border-radius: 5px;
+  color: red;
 }
 
 @keyframes anim {

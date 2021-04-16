@@ -2,6 +2,7 @@ const chatForm = document.getElementById("chat-form");
 const chatMessages = document.querySelector(".chat-messages");
 const chatMessagesRight = document.querySelector(".chat-sidebar-right");
 const roomName = document.getElementById("room-name");
+const userName = document.getElementById("user-name");
 const userList = document.getElementById("users");
 
 //Get username and room from URL
@@ -19,6 +20,11 @@ socket.on("roomUsers", ({ room, users }) => {
   outputRoomName(room);
   outputUsers(users);
 });
+
+//Get username
+socket.on("username",(username) => {
+outputUserName(username)
+})
 
 //Message from server
 socket.on("message", (message) => {
@@ -60,8 +66,14 @@ function outputRoomName(room) {
   roomName.innerText = room;
 }
 
+//Add username to DOM
+function outputUserName(user) {
+  userName.innerText = user;
+}
+
 //Add users to DOM
 function outputUsers(users) {
+  
   userList.innerHTML = `
     ${users.map((user) => `<li>${user.username}</li>`).join("")}
     `;
@@ -152,7 +164,22 @@ socket.on("TurnToPlay", (user) => {
   console.log(document.getElementById("cover"));
   document.getElementById("cover").style.display = "none";
   document.getElementById("skip-btn").style.display = "block";
+
+  socket.emit("broadcastPlayingUser",user)
 });
+
+socket.on("playingUser", (user) => {
+    var nameList = document.getElementsByTagName("ul")[0];
+    var names = nameList.getElementsByTagName("li");
+  
+    for(i=0;i<names.length;i++){
+      if(names[i].innerHTML == user.username){
+        names[i].style.color="red"
+      }else{
+        names[i].style.color="black"
+      }
+    }
+})
 
 //When the card obeys the rules
 socket.on("wrongCard", () => {
@@ -180,3 +207,14 @@ colours.forEach((element) => {
     socket.emit("newColour", element);
   });
 });
+
+
+//Get winning message
+socket.on("win",() => {
+  document.getElementById("winner").style.display = "block"
+})
+
+//Get winning message
+socket.on("lose",() => {
+  document.getElementById("loser").style.display = "block"
+})
