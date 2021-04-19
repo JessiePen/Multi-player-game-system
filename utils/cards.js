@@ -8,6 +8,7 @@ const card = [
   "colour-change",
   "add4",
   "colour-change",
+  "blue-0",
   "blue-1",
   "blue-2",
   "blue-3",
@@ -32,6 +33,7 @@ const card = [
   "blue-add2",
   "blue-inverse",
   "blue-ban",
+  "green-0",
   "green-1",
   "green-2",
   "green-3",
@@ -56,6 +58,7 @@ const card = [
   "green-add2",
   "green-inverse",
   "green-ban",
+  "yellow-0",
   "yellow-1",
   "yellow-2",
   "yellow-3",
@@ -80,6 +83,7 @@ const card = [
   "yellow-add2",
   "yellow-inverse",
   "yellow-ban",
+  "red-0",
   "red-1",
   "red-2",
   "red-3",
@@ -119,8 +123,8 @@ const greenCard = [
   "green-add2",
   "green-inverse",
   "green-ban",
-
 ];
+
 const redCard = [
   "red-1",
   "red-2",
@@ -180,9 +184,10 @@ const blackCard = ["add4", "colour-change"];
 var cardSet = card
 
 function formatCard(username) {
-  // const random = Math.floor(Math.random() * 46);
   const random = Math.floor(Math.random() * cardSet.length);
   cardSet.splice(random,1)
+  console.log(cardSet.length)
+  console.log(random)
   const attribute = card[random];
   const id = Math.random().toFixed(5);
 
@@ -281,6 +286,7 @@ function setLastColour(colour) {
     lastCategory = yellowCard;
   }
 }
+
 
 module.exports = {
   formatCard,

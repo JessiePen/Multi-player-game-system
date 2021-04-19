@@ -219,5 +219,3 @@ socket.on("lose",() => {
   document.getElementById("loser").style.display = "block"
 })
 
-
-//Dynamically create rooms according rooms.json file
