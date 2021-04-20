@@ -111,6 +111,7 @@ const card = [
 ];
 
 const greenCard = [
+  "green-0",
   "green-1",
   "green-2",
   "green-3",
@@ -125,7 +126,9 @@ const greenCard = [
   "green-ban",
 ];
 
+
 const redCard = [
+  "red-0",
   "red-1",
   "red-2",
   "red-3",
@@ -140,6 +143,7 @@ const redCard = [
   "red-ban",
 ];
 const yellowCard = [
+  "yellow-0",
   "yellow-1",
   "yellow-2",
   "yellow-3",
@@ -155,6 +159,7 @@ const yellowCard = [
 
 ];
 const blueCard = [
+  "blue-0",
   "blue-1",
   "blue-2",
   "blue-3",
@@ -185,12 +190,11 @@ var cardSet = card
 
 function formatCard(username) {
   const random = Math.floor(Math.random() * cardSet.length);
-  cardSet.splice(random,1)
-  console.log(cardSet.length)
-  console.log(random)
   const attribute = card[random];
-  const id = Math.random().toFixed(5);
+  cardSet.splice(random,1)
 
+
+  const id = Math.random().toFixed(5);
   if(cardSet.length==0){
     cardSet = card
   }
