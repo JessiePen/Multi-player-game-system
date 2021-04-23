@@ -21,6 +21,7 @@
 			<main class="join-main">
 				<form action="chat.html" name="indexform">
 
+
 					<div class="form-control">
 						<label for="username">Username</label>
 						<input
@@ -31,6 +32,8 @@
 							required
 						/>
 					</div>
+					<div id="error" style="color: red;"></div>
+
 					<div class="form-control" id="current-room">
 						<label for="room">Room</label>
 						<select name="room" id="room1">
@@ -59,8 +62,6 @@
 						<button type="submit" class="btn" id="create-button">Create Room</button>
 					</div>
 				</form>
-
-				<!-- <button type="submit" class="btn" id="create-button">Create Room</button> -->
 
 			</main>
 		</div>

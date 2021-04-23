@@ -3,7 +3,8 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const fs = require("fs");
-const saveRooms = require("./public/js/room");
+// const saveRooms = require("./public/js/room");
+const saveRooms = require("./utils/room");
 const formatMessage = require("./utils/messages");
 const { formatCard, checkCard, setLastColour } = require("./utils/cards");
 
@@ -40,6 +41,12 @@ var addTwoCards = ["green-add2", "red-add2", "blue-add2", "yellow-add2"];
 
 //Run when client connects
 io.on("connection", (socket) => {
+
+  // socket.on("username",(username)=>{
+  //   exist = users.find(user => user.username === username)
+  //   console.log(exist)
+  // })
+
   socket.on("joinRoom", ({ username, room }) => {
     const user = userJoin(socket.id, username, room);
     socket.join(user.room);
@@ -272,6 +279,7 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "1mb" }));
+
 app.post("/chat", (request, response) => {
   room = request.body;
   saveRooms(room);
@@ -282,10 +290,22 @@ app.post("/chat", (request, response) => {
   });
 });
 
-app.post('/index.html',(req,res) => {
-  console.log(req.body)
-  res.status(201).send("get request")
-})
+app.post("/username", (request, response) => {
+  userExist = false
+  user = request.body;
+  var allUsers = getRoomUsers(user.room)
+  allUsers.forEach((existUser) => {
+    if(existUser.username.toLowerCase() == user.username.toLowerCase()){
+      userExist = true
+    }
+  }
+  )
+  response.json({
+    status:"success",
+    exist:userExist
+  })
+  // console.log(userExist)
+});
 
 
 const PORT = 4000;
