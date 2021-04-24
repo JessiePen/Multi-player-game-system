@@ -41,7 +41,6 @@ var addTwoCards = ["green-add2", "red-add2", "blue-add2", "yellow-add2"];
 
 //Run when client connects
 io.on("connection", (socket) => {
-
   // socket.on("username",(username)=>{
   //   exist = users.find(user => user.username === username)
   //   console.log(exist)
@@ -169,12 +168,11 @@ io.on("connection", (socket) => {
           formatMessage(botName, `${user.username} win!`)
         );
       } else {
-
         if (banCards.indexOf(card.attribute) > -1) {
           var nextUser = getNextUser(user, reverse);
           var nextNextUser = getNextUser(nextUser, reverse);
           io.to(nextNextUser.id).emit("TurnToPlay", nextNextUser);
-        }else{
+        } else {
           var nextUser = getNextUser(user, reverse);
           io.to(nextUser.id).emit("TurnToPlay", nextUser);
         }
@@ -239,7 +237,6 @@ io.on("connection", (socket) => {
   socket.on("broadcastPlayingUser", (user) => {
     io.to(user.room).emit("playingUser", user);
   });
-
 });
 
 function getTurn(userNum, currentUser) {
@@ -291,22 +288,20 @@ app.post("/chat", (request, response) => {
 });
 
 app.post("/username", (request, response) => {
-  userExist = false
+  userExist = false;
   user = request.body;
-  var allUsers = getRoomUsers(user.room)
+  var allUsers = getRoomUsers(user.room);
   allUsers.forEach((existUser) => {
-    if(existUser.username.toLowerCase() == user.username.toLowerCase()){
-      userExist = true
+    if (existUser.username.toLowerCase() == user.username.toLowerCase()) {
+      userExist = true;
     }
-  }
-  )
+  });
   response.json({
-    status:"success",
-    exist:userExist
-  })
+    status: "success",
+    exist: userExist,
+  });
   // console.log(userExist)
 });
-
 
 const PORT = 4000;
 
