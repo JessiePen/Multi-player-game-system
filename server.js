@@ -3,9 +3,8 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const fs = require("fs");
-// const saveRooms = require("./public/js/room");
-const saveRooms = require("./utils/room");
 const formatMessage = require("./utils/messages");
+
 const { formatCard, checkCard, setLastColour } = require("./utils/cards");
 
 const {
@@ -18,7 +17,7 @@ const {
   emptyCards,
 } = require("./utils/users");
 
-const { getAllRooms, addRoom } = require("./utils/room");
+const { getAllRooms, addRoom, saveRooms } = require("./utils/room");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -279,7 +278,7 @@ app.use(express.json({ limit: "1mb" }));
 
 app.post("/chat", (request, response) => {
   room = request.body;
-  saveRooms(room);
+  saveRooms(room)
   response.json({
     status: "success",
     value: room.value,

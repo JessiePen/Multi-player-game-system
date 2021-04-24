@@ -5,6 +5,7 @@ var pathFile = path.resolve(__dirname, "../public/rooms.json");
 const allRooms = []
 
 function getAllRooms(){
+  console.log("123")
     return allRooms
 }
 
@@ -41,7 +42,7 @@ const saveRooms = (room) => {
 
 
 module.exports = {
-    getAllRooms,
-    addRoom
+  getAllRooms,
+  addRoom,
+  saveRooms
 }
-module.exports = saveRooms
