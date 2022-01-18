@@ -3,9 +3,9 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const fs = require("fs");
-const formatMessage = require("./utils/messages");
+const formatMessage = require("./model/messages");
 
-const { formatCard, checkCard, setLastColour } = require("./utils/cards");
+const { formatCard, checkCard, setLastColour } = require("./model/cards");
 
 const {
   userJoin,
@@ -15,9 +15,9 @@ const {
   userAddCard,
   userDropCard,
   emptyCards,
-} = require("./utils/users");
+} = require("./model/users");
 
-const { getAllRooms, addRoom, saveRooms } = require("./utils/room");
+const { getAllRooms, addRoom, saveRooms } = require("./model/room");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
