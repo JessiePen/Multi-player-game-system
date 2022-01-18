@@ -4,6 +4,7 @@ const express = require("express");
 const socketio = require("socket.io");
 const fs = require("fs");
 const formatMessage = require("./utils/messages");
+const exphbs = require('express-handlebars');
 
 const { formatCard, checkCard, setLastColour } = require("./utils/cards");
 
@@ -23,6 +24,18 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 app.use(express.static(path.join(__dirname, "public")));
+
+// Handlebars
+app.engine('.hbs',
+  exphbs.engine({
+    defaultLayout: 'main',
+    extname: '.hbs',
+  })
+)
+app.set('view engine', '.hbs')
+
+app.use('/',require('./public/js/index'))
+
 
 const botName = "Admin";
 var reverse = false;
@@ -80,13 +93,11 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     //Notify all users
     const user = userLeave(socket.id);
-
     if (user) {
       io.to(user.room).emit(
         "message",
         formatMessage(botName, `${user.username} has left the game`)
       );
-
       io.to(user.room).emit("roomUsers", {
         room: user.room,
         users: getRoomUsers(user.room),
@@ -301,6 +312,7 @@ app.post("/username", (request, response) => {
   });
   // console.log(userExist)
 });
+
 
 const PORT = process.env.PORT || 4000;
 
